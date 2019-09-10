@@ -38,12 +38,12 @@ const transform = ({ markdownAST, markdownNode }, options) =>
               url: "https://api-ssl.bitly.com/v4/bitlinks",
               headers: {
                 Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
               },
               data: {
                 long_url: node.url,
-                tags: [markdownNode.frontmatter.slug.substring(0, 50)],
-              },
+                tags: [markdownNode.frontmatter.slug.substring(0, 50)]
+              }
             })
           );
 
