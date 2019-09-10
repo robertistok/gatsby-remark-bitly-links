@@ -1,0 +1,1 @@
+Check out some of [the charities](https://bit.ly/2PyJr1c) and donate some money. There is no such thing as a small amount, every cent counts. These do an incredible amount of work fighting climate change and preserving our environment.
