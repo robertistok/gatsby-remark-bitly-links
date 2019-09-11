@@ -10,21 +10,20 @@ const processor = unified().use(stringify);
 const queue = new Queue(5, Infinity);
 const BITLY_DOMAINS = ["bit.ly", "amzn.to"];
 
-const transform = ({ markdownAST, markdownNode }, options) =>
+const transform = ({ markdownAST, markdownNode }, options = {}) =>
+  // eslint-disable-next-line no-async-promise-executor
   new Promise(async (resolve, reject) => {
-    const { accessToken, namedBitlys = [] } = options;
+    const { accessToken, brandedBitlys = [] } = options;
 
     const nodesToConvert = [];
 
     const visitor = node => {
       if (
         node.url &&
-        ![...BITLY_DOMAINS, ...namedBitlys].some(p => node.url.includes(p))
+        ![...BITLY_DOMAINS, ...brandedBitlys].some(p => node.url.includes(p))
       ) {
         nodesToConvert.push(node);
       }
-
-      return;
     };
 
     visit(markdownAST, "link", visitor);
@@ -32,6 +31,7 @@ const transform = ({ markdownAST, markdownNode }, options) =>
     if (nodesToConvert.length > 0) {
       for (const node of nodesToConvert) {
         try {
+          // eslint-disable-next-line no-await-in-loop
           const { data } = await queue.add(() =>
             axios({
               method: "post",
