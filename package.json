@@ -1,6 +1,6 @@
 {
   "name": "gatsby-remark-bitly-links",
-  "version": "1.0.0",
+  "version": "0.9.0",
   "main": "src/index.js",
   "author": "robertistok",
   "license": "MIT",
@@ -17,6 +17,13 @@
     "build": "babel src --out-dir . --ignore '**/*.test.js' -s",
     "test": "jest"
   },
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin",
+    "gatsby-remark",
+    "gatsby-remark-plugin",
+    "bitly"
+  ],
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
