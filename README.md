@@ -33,21 +33,20 @@ If you want to track the performance of your links in markdown files, this plugi
 
 ## Examples of usage
 
-Include this in your `gatsby-config.js` file, under the `gatsby-transformer-remark` plugin.
+Include this in your `gatsby-config.js` file, under the `gatsby-transformer-remark` plugins section.
 
-    plugins: [
-      {
-        resolve: "gatsby-remark-bitly-links",
-        options: {
-          accessToken: BITLY_ACCESS_TOKEN,
-          namedBitlys: ["mzl.la"],
-        }
+    {
+      resolve: "gatsby-transformer-remark",
+      options: {
+        plugins: [{
+          resolve: "gatsby-remark-bitly-links",
+          options: {
+            accessToken: BITLY_ACCESS_TOKEN,
+            namedBitlys: ["mzl.la"]
+          }
+        }]
       }
-    ]
-
-//See this [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code) on how to format code examples.
-
-This section could also include before-and-after examples of data when the plugin is enabled, if applicable.
+    }
 
 ## How to run tests
 
