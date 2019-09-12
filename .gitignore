@@ -67,3 +67,8 @@ yarn-error.log
 .pnp.js
 # Yarn Integrity file
 .yarn-integrity
+
+# compiled files
+*.js.map
+/index.js
+/helpers.js
