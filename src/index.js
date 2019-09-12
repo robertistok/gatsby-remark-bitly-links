@@ -8,25 +8,32 @@ const stringify = require("remark-stringify");
 
 const processor = unified().use(stringify);
 const queue = new Queue(5, Infinity);
+
 const BITLY_DOMAINS = ["bit.ly", "amzn.to"];
+
+function getNodesToConvert({ brandedBitlys, markdownAST }) {
+  const nodesToConvert = [];
+
+  const visitor = node => {
+    if (node.url && !brandedBitlys.some(p => node.url.includes(p))) {
+      nodesToConvert.push(node);
+    }
+  };
+
+  visit(markdownAST, "link", visitor);
+
+  return nodesToConvert;
+}
 
 const transform = ({ markdownAST, markdownNode }, options = {}) =>
   // eslint-disable-next-line no-async-promise-executor
   new Promise(async (resolve, reject) => {
     const { accessToken, brandedBitlys = [] } = options;
 
-    const nodesToConvert = [];
-
-    const visitor = node => {
-      if (
-        node.url &&
-        ![...BITLY_DOMAINS, ...brandedBitlys].some(p => node.url.includes(p))
-      ) {
-        nodesToConvert.push(node);
-      }
-    };
-
-    visit(markdownAST, "link", visitor);
+    const nodesToConvert = getNodesToConvert({
+      markdownAST,
+      brandedBitlys: [...BITLY_DOMAINS, ...brandedBitlys]
+    });
 
     if (nodesToConvert.length > 0) {
       for (const node of nodesToConvert) {
@@ -65,6 +72,8 @@ const transform = ({ markdownAST, markdownNode }, options = {}) =>
         }
       }
 
+      console.log("All the links are now converted to bitly links ✅");
+
       const markdown = processor.stringify(markdownAST);
 
       try {
@@ -72,10 +81,19 @@ const transform = ({ markdownAST, markdownNode }, options = {}) =>
           markdownNode.fileAbsolutePath,
           matter.stringify(markdown, markdownNode.frontmatter)
         );
+
+        console.log(
+          "The markdown files are now updated with the bitly links ✅"
+        );
       } catch (err) {
-        // An error occurred
+        console.log(
+          "❌ An error occured while trying to modify the markdown file."
+        );
+        console.log(err.message);
         reject(err);
       }
+    } else {
+      console.log("All the links are converted ✅");
     }
 
     resolve();
