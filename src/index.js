@@ -11,11 +11,11 @@ const queue = new Queue(5, Infinity);
 
 const BITLY_DOMAINS = ["bit.ly", "amzn.to"];
 
-function getNodesToConvert({ brandedBitlys, markdownAST }) {
+function getNodesToConvert({ namedBitlys, markdownAST }) {
   const nodesToConvert = [];
 
   const visitor = node => {
-    if (node.url && !brandedBitlys.some(p => node.url.includes(p))) {
+    if (node.url && !namedBitlys.some(p => node.url.includes(p))) {
       nodesToConvert.push(node);
     }
   };
@@ -28,11 +28,11 @@ function getNodesToConvert({ brandedBitlys, markdownAST }) {
 const transform = ({ markdownAST, markdownNode }, options = {}) =>
   // eslint-disable-next-line no-async-promise-executor
   new Promise(async (resolve, reject) => {
-    const { accessToken, brandedBitlys = [] } = options;
+    const { accessToken, namedBitlys = [] } = options;
 
     const nodesToConvert = getNodesToConvert({
       markdownAST,
-      brandedBitlys: [...BITLY_DOMAINS, ...brandedBitlys]
+      namedBitlys: [...BITLY_DOMAINS, ...namedBitlys]
     });
 
     if (nodesToConvert.length > 0) {
@@ -72,8 +72,6 @@ const transform = ({ markdownAST, markdownNode }, options = {}) =>
         }
       }
 
-      console.log("All the links are now converted to bitly links ✅");
-
       const markdown = processor.stringify(markdownAST);
 
       try {
@@ -92,8 +90,6 @@ const transform = ({ markdownAST, markdownNode }, options = {}) =>
         console.log(err.message);
         reject(err);
       }
-    } else {
-      console.log("All the links are converted ✅");
     }
 
     resolve();
