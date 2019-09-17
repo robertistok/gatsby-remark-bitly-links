@@ -8,25 +8,32 @@ const stringify = require("remark-stringify");
 
 const processor = unified().use(stringify);
 const queue = new Queue(5, Infinity);
+
 const BITLY_DOMAINS = ["bit.ly", "amzn.to"];
+
+function getNodesToConvert({ namedBitlys, markdownAST }) {
+  const nodesToConvert = [];
+
+  const visitor = node => {
+    if (node.url && !namedBitlys.some(p => node.url.includes(p))) {
+      nodesToConvert.push(node);
+    }
+  };
+
+  visit(markdownAST, "link", visitor);
+
+  return nodesToConvert;
+}
 
 const transform = ({ markdownAST, markdownNode }, options = {}) =>
   // eslint-disable-next-line no-async-promise-executor
   new Promise(async (resolve, reject) => {
-    const { accessToken, brandedBitlys = [] } = options;
+    const { accessToken, namedBitlys = [] } = options;
 
-    const nodesToConvert = [];
-
-    const visitor = node => {
-      if (
-        node.url &&
-        ![...BITLY_DOMAINS, ...brandedBitlys].some(p => node.url.includes(p))
-      ) {
-        nodesToConvert.push(node);
-      }
-    };
-
-    visit(markdownAST, "link", visitor);
+    const nodesToConvert = getNodesToConvert({
+      markdownAST,
+      namedBitlys: [...BITLY_DOMAINS, ...namedBitlys]
+    });
 
     if (nodesToConvert.length > 0) {
       for (const node of nodesToConvert) {
@@ -42,7 +49,9 @@ const transform = ({ markdownAST, markdownNode }, options = {}) =>
               },
               data: {
                 long_url: node.url,
-                tags: [markdownNode.frontmatter.slug.substring(0, 50)]
+                tags: markdownNode.frontmatter.slug
+                  ? [markdownNode.frontmatter.slug.substring(0, 50)]
+                  : null
               }
             })
           );
@@ -72,8 +81,17 @@ const transform = ({ markdownAST, markdownNode }, options = {}) =>
           markdownNode.fileAbsolutePath,
           matter.stringify(markdown, markdownNode.frontmatter)
         );
+
+        console.log(
+          `The markdown file with slug ${
+            markdownNode.frontmatter.slug ? markdownNode.frontmatter.slug : ""
+          } is now updated with the bitly links ✅`
+        );
       } catch (err) {
-        // An error occurred
+        console.log(
+          "❌ An error occured while trying to modify the markdown file."
+        );
+        console.log(err.message);
         reject(err);
       }
     }
