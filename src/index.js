@@ -49,7 +49,9 @@ const transform = ({ markdownAST, markdownNode }, options = {}) =>
               },
               data: {
                 long_url: node.url,
-                tags: [markdownNode.frontmatter.slug.substring(0, 50)]
+                tags: markdownNode.frontmatter.slug
+                  ? [markdownNode.frontmatter.slug.substring(0, 50)]
+                  : null
               }
             })
           );
@@ -81,7 +83,9 @@ const transform = ({ markdownAST, markdownNode }, options = {}) =>
         );
 
         console.log(
-          "The markdown files are now updated with the bitly links ✅"
+          `The markdown file with slug ${
+            markdownNode.frontmatter.slug ? markdownNode.frontmatter.slug : ""
+          } is now updated with the bitly links ✅`
         );
       } catch (err) {
         console.log(
