@@ -30,7 +30,7 @@ or
 
 ### Notes
 
-- In order to identify the source of the links, this plugin will add a tag when creating the link, as you can see it in the [bitly docs](https://dev.bitly.com/v4/#operation/createFullBitlink). This tag is the first 50 characters of the **slug** parameter from the **frontmatter** of the markdown file. This means that you have to have a **slug** value in your **frontmatter**, or the value is not going be populated.
+- In order to identify the source of the links, this plugin will add a tag when creating the link, as you can see it in the [bitly docs](https://dev.bitly.com/v4/#operation/createFullBitlink). This tag is the first 50 characters of the **slug** parameter from the **frontmatter** of the markdown file. This means that you have to have a **slug** value in your **frontmatter**, or the **tag** value is not going be populated.
 
 ## When do I use this plugin?
 
