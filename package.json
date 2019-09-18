@@ -1,6 +1,6 @@
 {
   "name": "gatsby-remark-bitly-links",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "author": "robertistok",
   "license": "MIT",
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "babel src --out-dir . --ignore '**/*.test.js' -s",
-    "publish": "yarn build && npm publish",
+    "npm:publish": "yarn build && yarn publish",
     "test": "jest"
   },
   "keywords": [
