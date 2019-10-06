@@ -53,10 +53,6 @@ Include this in your `gatsby-config.js` file, under the `gatsby-transformer-rema
       }
     }
 
-## How to run tests
-
-Tests are still work in progres...
-
 ## How to contribute
 
 If you have any questions, please open an issue and we will figure it out!
